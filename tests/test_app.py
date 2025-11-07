@@ -1,8 +1,15 @@
-from fastapi.testclient import TestClient
+import os
+import sys
 from urllib.parse import quote
-from src.app import app
 
-client = TestClient(app)
+# Ensure src is importable
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
+
+from fastapi.testclient import TestClient
+
+import app as app_module
+
+client = TestClient(app_module.app)
 
 
 def test_get_activities():
@@ -46,4 +53,3 @@ def test_signup_and_unregister_flow():
     # Verify removed
     resp = client.get("/activities")
     assert email not in resp.json()[activity]["participants"]
-*** End Patch
